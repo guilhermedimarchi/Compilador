@@ -2,12 +2,16 @@ import java.util.Hashtable;
 
 public class Lexer {
 	
-	public char [] entrada;
-	public String token;
-	public int pos;
+	private char [] entrada;
+	private String token;
+	private int pos;
+	
+	//somente get para não deixar alterar o valor de token ou de outras variaveis
+	public String getToken() {
+		return token;
+	}
 	
 	static private Hashtable<String, String> palavrasReservadas;
-	
 
 	public Lexer(String entrada)
 	{
@@ -39,6 +43,8 @@ public class Lexer {
 		palavrasReservadas.put("and", 	Gramatica.AND);
 		palavrasReservadas.put("true", 	Gramatica.TRUE);
 		palavrasReservadas.put("false", Gramatica.FALSE);
+		palavrasReservadas.put("then", Gramatica.THEN);
+		palavrasReservadas.put("endif", Gramatica.ENDIF);
 	}
 	
 	public void nextToken() {
