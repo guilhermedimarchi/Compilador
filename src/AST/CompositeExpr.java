@@ -11,4 +11,9 @@ public class CompositeExpr extends Expr{
 		this.d = d;
 	}
 
+	@Override
+	public String toString() {
+		return "CompositeExpr [Expr esquerda=" + e +  ", op=" + op + ", Expr direita=" + d + "]";
+	}
+
 }

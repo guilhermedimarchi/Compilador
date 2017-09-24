@@ -11,5 +11,11 @@ public class Program {
 		this.v = v;
 		this.s = s;
 	}
+
+	@Override
+	public String toString() {
+		return "Program [Variaveis=" + v + ", statements=" + s + "]";
+	}
+	
 	
 }

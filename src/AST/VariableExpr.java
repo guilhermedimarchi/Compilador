@@ -13,4 +13,9 @@ public class VariableExpr extends Expr {
 		this.name = name;
 		this.valor = valor;
 	}
+	@Override
+	public String toString() {
+		return "VariableExpr [name=" + name + ", valor=" + valor + "]";
+	}
+	
 }

@@ -8,4 +8,9 @@ public class ReadStatement extends Statement {
 		this.e = e;
 	}
 
+	@Override
+	public String toString() {
+		return "ReadStatement [e=" + e + "]";
+	}
+
 }

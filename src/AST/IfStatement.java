@@ -1,6 +1,8 @@
 package AST;
 
 public class IfStatement extends Statement{
+
+
 	Expr e;
 	Statement s1, s2;
 	
@@ -11,4 +13,9 @@ public class IfStatement extends Statement{
 		this.s2 = s2;
 	}
 
+	
+		@Override
+	public String toString() {
+		return "IfStatement [Comparacao=" + e + ", Then=" + s1 + ", Else=" + s2 + "]";
+	}
 }

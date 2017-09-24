@@ -9,5 +9,10 @@ public class CompositeStatement extends Statement{
 		this.s = s;
 		this.sl = sl;
 	}
+
+	@Override
+	public String toString() {
+		return "CompositeStatement [statement1=" + s + ", statementList=" + sl + "]";
+	}
 	
 }

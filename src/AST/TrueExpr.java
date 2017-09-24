@@ -4,6 +4,7 @@ import Lexer.Gramatica;
 
 public class TrueExpr  extends Expr{
 	
+
 	private boolean valor;
 	
 	public TrueExpr(String valor)
@@ -12,6 +13,10 @@ public class TrueExpr  extends Expr{
 			this.valor = true;
 		else
 			valor = null;
+	}
+	@Override
+	public String toString() {
+		return "TrueExpr [valor=" + valor + "]";
 	}
 
 }

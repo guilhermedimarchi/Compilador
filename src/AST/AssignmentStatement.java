@@ -10,4 +10,9 @@ public class AssignmentStatement extends Statement {
 		this.op = op;
 		this.e = e;
 	}
+
+	@Override
+	public String toString() {
+		return "AssignmentStatement [Expr esquerda=" + e +  ", op=" + op + ", Expr direita=" + d + "]";
+	}
 }

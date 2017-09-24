@@ -12,4 +12,9 @@ public class FalseExpr extends Expr{
 		else
 			valor = null;
 	}
+
+	@Override
+	public String toString() {
+		return "FalseExpr [valor=" + valor + "]";
+	}
 }
