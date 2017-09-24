@@ -78,7 +78,7 @@ public class Lexer {
 					pos++;
 				}
 				valorNumerico = Integer.parseInt(numero);
-				token = Gramatica.DIGIT;
+				token = Gramatica.NUMBER;
 			} else if (Character.isLetter(ch)) // VERIFICA SE É ID ou alguma palavra reservada
 			{
 				String palavra = "";
@@ -106,12 +106,16 @@ public class Lexer {
 				} else if (entrada[pos] == '>') {
 					token = Gramatica.DIFERENTE;
 				}
+				else
+					token = Gramatica.MENOR;
 			} else if (ch == '>') {
 				pos++;
 				if (entrada[pos] == '=') {
 					pos++;
 					token = Gramatica.MAIORIGUAL;
 				}
+				else
+					token = Gramatica.MAIOR;
 			} else {
 				pos++;
 				switch (ch) {
@@ -126,12 +130,6 @@ public class Lexer {
 					break;
 				case '/':
 					token = Gramatica.DIVISAO;
-					break;
-				case '>':
-					token = Gramatica.MAIOR;
-					break;
-				case '<':
-					token = Gramatica.MENOR;
 					break;
 				case '(':
 					token = Gramatica.PARENTESESE;

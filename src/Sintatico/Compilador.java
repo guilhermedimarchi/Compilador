@@ -150,8 +150,7 @@ public class Compilador {
 			error();
 	}
 
-	// IfStatement ::= "if" OrExpr "then" StatementList [ "else" StatementList ]
-	// "endif"
+	// IfStatement ::= "if" OrExpr "then" StatementList [ "else" StatementList ] "endif"
 	private void ifStatement() {
 		lexer.nextToken();
 		orExpr();
