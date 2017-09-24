@@ -6,7 +6,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		String entrada = "var abc : integer; begin  READ(abc); Write(abc); if a > b then a = 1 endif  end";
+		String entrada = "var abc,abd,abe : integer; begin  READ(abc); Write(abd); if abc > abe then abe = 1 endif  end";
 
 		String entradaErro = "var abc : integer; begin123123;;  READ(abc); Write(abc)  end";
 

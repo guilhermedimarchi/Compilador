@@ -1,5 +1,6 @@
 package Sintatico;
 
+import java.util.Hashtable;
 import java.util.Vector;
 
 import AST.*;
@@ -7,7 +8,8 @@ import Lexer.Gramatica;
 import Lexer.Lexer;
 
 public class Compilador {
-	Lexer lexer;
+	private Lexer lexer;
+	private Hashtable<String, Integer> variaveisDeclaradas = new Hashtable();
 
 	public Compilador(Lexer lexer) {
 		this.lexer = lexer;
@@ -75,6 +77,15 @@ public class Compilador {
 		Expr e = null;
 		if (lexer.getToken() == Gramatica.ID)
 		{
+			//analise semantica
+			if(!variaveisDeclaradas.containsKey(lexer.getValorString()))
+				variaveisDeclaradas.put(lexer.getValorString(), 0);
+			else
+			{
+				System.out.println("Nome de variável já utilizado\n");
+				error();
+			}
+			
 			e = new VariableExpr(lexer.getValorString());
 			lexer.nextToken();
 		}
@@ -392,7 +403,14 @@ public class Compilador {
 		Expr e = null;
 		if (lexer.getToken() == Gramatica.ID)
 		{
-			e = new VariableExpr(lexer.getValorString());
+			//Analise sintatica. Verifica se a variavel que está sendo utilizada foi realmente criada
+			if(variaveisDeclaradas.containsKey(lexer.getValorString()))
+				e = new VariableExpr(lexer.getValorString());
+			else
+			{
+				System.out.println("Variavel não declarada");
+				error();
+			}
 			lexer.nextToken();
 		}
 		else
