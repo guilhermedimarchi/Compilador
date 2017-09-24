@@ -14,6 +14,7 @@ public class Compilador {
 	public void error()
 	{
 		System.out.println("ERRO");
+		Runtime.getRuntime().exit(1);
 	}
 	
 	//Program ::= [ "var" VarDecList ] CompositeStatement
