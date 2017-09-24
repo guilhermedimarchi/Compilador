@@ -1,3 +1,4 @@
+package Lexer;
 import java.util.Hashtable;
 
 public class Lexer {
@@ -5,11 +6,15 @@ public class Lexer {
 	private char [] entrada;
 	private String token;
 	private int pos;
-	
+	private int valorNumerico;
 	//somente get para não deixar alterar o valor de token ou de outras variaveis
 	public String getToken() {
 		return token;
 	}
+	public int getValorNumerico() {
+		return valorNumerico;
+	}
+	
 	
 	static private Hashtable<String, String> palavrasReservadas;
 
@@ -44,7 +49,9 @@ public class Lexer {
 		palavrasReservadas.put("true", 	Gramatica.TRUE);
 		palavrasReservadas.put("false", Gramatica.FALSE);
 		palavrasReservadas.put("then", Gramatica.THEN);
+		palavrasReservadas.put("not", Gramatica.NOT);
 		palavrasReservadas.put("endif", Gramatica.ENDIF);
+		
 	}
 	
 	public void nextToken() {
@@ -69,11 +76,14 @@ public class Lexer {
 			
 			if(Character.isDigit(ch)) //VERIFICA SE É NUMERO
 			{
+				String numero = "";
 				while(Character.isDigit(entrada[pos]))
 				{
+					numero += entrada[pos];
 					pos++;
 				}
-				token = Gramatica.NUMBER;
+				valorNumerico = Integer.parseInt(numero);
+				token = Gramatica.DIGIT;
 			}
 			else if (Character.isLetter(ch)) //VERIFICA SE É ID ou alguma palavra reservada
 			{
@@ -87,6 +97,41 @@ public class Lexer {
 					token = Gramatica.ID;
 				else
 					token = palavrasReservadas.get(palavra);	
+			}
+			else if(ch=='=')
+			{
+				pos++;
+				if(entrada[pos]=='=')
+				{
+					pos++;
+					token = Gramatica.IGUAL;
+				}
+				else
+				{
+					token = Gramatica.ATRIBUICAO;
+				}
+			}
+			else if(ch=='<')
+			{
+				pos++;
+				if(entrada[pos]=='=')
+				{
+					pos++;
+					token = Gramatica.MENORIGUAL;
+				}
+				else if(entrada[pos]=='>')
+				{
+					token = Gramatica.DIFERENTE;
+				}
+			}
+			else if(ch=='>')
+			{
+				pos++;
+				if(entrada[pos]=='=')
+				{
+					pos++;
+					token = Gramatica.MAIORIGUAL;
+				}
 			}
 			else
 			{
@@ -110,9 +155,6 @@ public class Lexer {
 					case '<':
 						token = Gramatica.MENOR;
 						break;
-					case '=':
-						token = Gramatica.IGUAL;
-						break;
 					case '(':
 						token = Gramatica.PARENTESESD;
 						break;
@@ -124,6 +166,9 @@ public class Lexer {
 						break;
 					case ';':
 						token = Gramatica.PONTOEVIRGULA;
+						break;
+					case ':':
+						token = Gramatica.DOISPONTOS;
 						break;
 					case '.':
 						token = Gramatica.PONTO;

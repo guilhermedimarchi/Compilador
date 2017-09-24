@@ -1,3 +1,4 @@
+package Lexer;
 
 public class Gramatica {
 
@@ -17,9 +18,14 @@ public class Gramatica {
 		PARENTESESD = "parentesesd",
 		PARENTESESE = "parentesese",
 		MULTIPLICACAO = "multiplicacao",
+		MODULO= "modulo",
 		DIVISAO = "divisao",
 		MAIOR = "maior",
 		MENOR = "menor",
+		MENORIGUAL = "menorigual",
+		MAIORIGUAL = "maiorigual",
+		ATRIBUICAO = "atribuicao",
+		DIFERENTE = "diferente",
 		IGUAL = "igual",
 		VIRGULA = "virgula",
 		PONTOEVIRGULA = "pontoevirgula",
@@ -34,6 +40,9 @@ public class Gramatica {
 		OR = "or",
 		AND = "and",
 		TRUE = "true",
-		FALSE = "false";
+		DIGIT = "digit",
+		NOT = "not",
+		FALSE = "false",
+		DOISPONTOS = "doispontos";
 	
 }
