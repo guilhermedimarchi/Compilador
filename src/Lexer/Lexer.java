@@ -20,8 +20,7 @@ public class Lexer {
 
 	public Lexer(String entrada)
 	{
-		entrada.toLowerCase();
-		this.entrada = entrada.toCharArray();
+		this.entrada = entrada.toLowerCase().toCharArray();
 		pos = 0;
 		token = "";
 		initpalavrasReservadas();
@@ -156,10 +155,10 @@ public class Lexer {
 						token = Gramatica.MENOR;
 						break;
 					case '(':
-						token = Gramatica.PARENTESESD;
+						token = Gramatica.PARENTESESE;
 						break;
 					case ')':
-						token = Gramatica.PARENTESESE;
+						token = Gramatica.PARENTESESD;
 						break;
 					case ',':
 						token = Gramatica.VIRGULA;

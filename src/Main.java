@@ -5,7 +5,9 @@ public class Main {
 
 		public static void main(String[] args) {
 
-		String entrada = "var a : 2;";
+		String entrada = "begin" + 
+				"  Write(abc)" + 
+				" end";
 		System.out.println("Código de entrada: "+entrada);
 		
 		Lexer lexer = new Lexer(entrada);

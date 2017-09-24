@@ -106,8 +106,6 @@ public class Compilador {
 				lexer.nextToken();
 				statementList();
 			}
-			else
-				error();
 		}
 	}
 
@@ -262,7 +260,7 @@ public class Compilador {
 			case Gramatica.NUMBER:
 				number();
 				break;
-			case Gramatica.VAR:
+			case Gramatica.ID:
 				variable();
 				break;
 			case Gramatica.TRUE:
