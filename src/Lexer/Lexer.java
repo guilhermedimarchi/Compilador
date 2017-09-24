@@ -8,6 +8,7 @@ public class Lexer {
 	private String token;
 	private int pos;
 	private int valorNumerico;
+	private String valorString;
 
 	// somente get para não deixar alterar o valor de token ou de outras variaveis
 	public String getToken() {
@@ -16,6 +17,10 @@ public class Lexer {
 
 	public int getValorNumerico() {
 		return valorNumerico;
+	}
+	
+	public String getValorString() {
+		return valorString;
 	}
 
 	static private Hashtable<String, String> palavrasReservadas;
@@ -87,36 +92,53 @@ public class Lexer {
 					pos++;
 				}
 				if (!palavrasReservadas.containsKey(palavra))
+				{
 					token = Gramatica.ID;
+					valorString = palavra;
+				}
 				else
+				{
 					token = palavrasReservadas.get(palavra);
+					valorString = palavra;
+				}
 			} else if (ch == '=') {
+				String palavra = ""+ ch;
 				pos++;
 				if (entrada[pos] == '=') {
+					palavra += entrada[pos];
 					pos++;
 					token = Gramatica.IGUAL;
 				} else {
 					token = Gramatica.ATRIBUICAO;
 				}
+				valorString = palavra;
 			} else if (ch == '<') {
+				String palavra = ""+ ch;
 				pos++;
 				if (entrada[pos] == '=') {
+					palavra += entrada[pos];
 					pos++;
 					token = Gramatica.MENORIGUAL;
 				} else if (entrada[pos] == '>') {
+					palavra += entrada[pos];
 					token = Gramatica.DIFERENTE;
 				}
 				else
 					token = Gramatica.MENOR;
+				valorString = palavra;
 			} else if (ch == '>') {
+				String palavra = ""+ ch;
 				pos++;
 				if (entrada[pos] == '=') {
+					palavra += entrada[pos];
 					pos++;
 					token = Gramatica.MAIORIGUAL;
 				}
 				else
 					token = Gramatica.MAIOR;
+				valorString = palavra;
 			} else {
+				valorString += "" + ch;
 				pos++;
 				switch (ch) {
 				case '+':

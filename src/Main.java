@@ -1,3 +1,4 @@
+import AST.Program;
 import Lexer.Lexer;
 import Sintatico.Compilador;
 
@@ -13,7 +14,8 @@ public class Main {
 
 		Lexer lexer = new Lexer(entrada);
 		Compilador compilador = new Compilador(lexer);
-		compilador.program();
+		
+		Program p = compilador.program();
 
 		System.out.println("Sucesso");
 

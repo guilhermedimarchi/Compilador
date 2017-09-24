@@ -1,5 +1,8 @@
 package Sintatico;
 
+import java.util.Vector;
+
+import AST.*;
 import Lexer.Gramatica;
 import Lexer.Lexer;
 
@@ -16,26 +19,29 @@ public class Compilador {
 	}
 
 	// Program ::= [ "var" VarDecList ] CompositeStatement
-	public void program() {
+	public Program program() {
+		Vector v = null;
 		lexer.nextToken();
 		if (lexer.getToken() == Gramatica.VAR) {
 			lexer.nextToken();
-			varDecList();
+			v = varDecList();
 		}
-		compositeStatement();
+		return new Program(v, compositeStatement());
 	}
 
 	// VarDecList ::= VarDecList2 { VarDecList2 }
-	private void varDecList() {
-		varDecList2();
+	private Vector varDecList() {
+		Vector v = new Vector();
+		v.addElement(varDecList2());
 		while (lexer.getToken() == Gramatica.ID) {
-			varDecList2();
+			v.addElement(varDecList2());
 		}
+		return v;
 	}
 
 	// VarDecList2 ::= Ident { ’,’ Ident } ’:’ Type ’;’
-	private void varDecList2() {
-		ident();
+	private Expr varDecList2() {
+		Expr e = ident();
 		while (lexer.getToken() == Gramatica.VIRGULA) {
 			lexer.nextToken();
 			ident();
@@ -50,6 +56,8 @@ public class Compilador {
 			lexer.nextToken();
 		} else
 			error();
+		
+		return e;
 
 	}
 
@@ -63,68 +71,82 @@ public class Compilador {
 	}
 
 	// Ident ::= Letter { Letter }
-	private void ident() {
+	private Expr ident() {
+		Expr e = null;
 		if (lexer.getToken() == Gramatica.ID)
+		{
+			e = new VariableExpr(lexer.getValorString());
 			lexer.nextToken();
+		}
 		else
 			error();
+		
+		return e;
 	}
 
 	// CompositeStatement ::= "begin" StatementList "end"
-	private void compositeStatement() {
+	private Statement compositeStatement() {
+		Statement e = null;
 		if (lexer.getToken() != Gramatica.BEGIN)
 			error();
 
 		lexer.nextToken();
 
-		statementList();
+		e = statementList();
 
 		if (lexer.getToken() != Gramatica.END)
 			error();
 
 		lexer.nextToken();
 
+		return e;
 	}
 
 	// StatementList ::= | Statement ";" StatementList
-	private void statementList() {
+	private Statement statementList() {
+		Statement s = null;
 		if (lexer.getToken() != Gramatica.FIM) {
-			statement();
+			s = statement();
 			if (lexer.getToken() == Gramatica.PONTOEVIRGULA) {
 				lexer.nextToken();
-				statementList();
+				return new CompositeStatement(s, statementList());
 			}
 		}
+		return s;
 	}
 
 	// Statement ::= AssignmentStatement | IfStatement | ReadStatement |
 	// WriteStatement
-	private void statement() {
+	private Statement statement() {
+		Statement s = null;
 		switch (lexer.getToken()) {
-		case Gramatica.ID:
-			assignmentStatement();
-			break;
-		case Gramatica.IF:
-			ifStatement();
-			break;
-		case Gramatica.READ:
-			readStatement();
-			break;
-		case Gramatica.WRITE:
-			writeStatement();
-			break;
-		default:
-			error();
+			case Gramatica.ID:
+				s = assignmentStatement();
+				break;
+			case Gramatica.IF:
+				s = ifStatement();
+				break;
+			case Gramatica.READ:
+				s = readStatement();
+				break;
+			case Gramatica.WRITE:
+				s = writeStatement();
+				break;
+			default:
+				error();
 		}
+		return s;
 	}
 
 	// WriteStatement ::= "write" "(" OrExpr ")"
-	private void writeStatement() {
+	private Statement writeStatement() {
+		Expr e = null;
+		
 		lexer.nextToken();
 		if (lexer.getToken() == Gramatica.PARENTESESE) {
 			lexer.nextToken();
 
-			orExpr();
+			e = orExpr();
 
 			if (lexer.getToken() == Gramatica.PARENTESESD)
 				lexer.nextToken();
@@ -132,15 +154,17 @@ public class Compilador {
 				error();
 		} else
 			error();
+		return new WriteStatement(e);
 	}
 
 	// ReadStatement ::= "read" "(" Variable ")"
-	private void readStatement() {
+	private Statement readStatement() {
+		Expr e = null;
 		lexer.nextToken();
 		if (lexer.getToken() == Gramatica.PARENTESESE) {
 			lexer.nextToken();
 
-			variable();
+			e = variable();
 
 			if (lexer.getToken() == Gramatica.PARENTESESD)
 				lexer.nextToken();
@@ -148,181 +172,232 @@ public class Compilador {
 				error();
 		} else
 			error();
+		
+		return new ReadStatement(e);
 	}
 
 	// IfStatement ::= "if" OrExpr "then" StatementList [ "else" StatementList ] "endif"
-	private void ifStatement() {
+	private Statement ifStatement() {
+		Statement s1 =null, s2 = null;
+		
 		lexer.nextToken();
-		orExpr();
+		Expr e = orExpr();
 		if (lexer.getToken() == Gramatica.THEN) {
 			lexer.nextToken();
-			statementList();
+			s1 = statementList();
 		} else
 			error();
 		if (lexer.getToken() == Gramatica.ELSE) {
 			lexer.nextToken();
-			statementList();
+			s2 = statementList();
 		}
 		if (lexer.getToken() == Gramatica.ENDIF)
 			lexer.nextToken();
 		else
 			error();
+		
+		return new IfStatement(e, s1, s2);
 	}
 
-	private void assignmentStatement() {
-		variable();
+	private Statement assignmentStatement() {
+		Expr e = variable();
 		if (lexer.getToken() == Gramatica.ATRIBUICAO) {
+			String op = lexer.getToken();
 			lexer.nextToken();
-			orExpr();
+			return new AssignmentStatement(e,op,orExpr());
 		}
+		else 
+			error();
+		return null;
 	}
 
 	// OrExpr ::= AndExpr [ "or" AndExpr ]
-	private void orExpr() {
-		andExpr();
+	private Expr orExpr() {
+		Expr e = andExpr();
 		if (lexer.getToken() == Gramatica.OR) {
+			String op = lexer.getToken();
 			lexer.nextToken();
-			andExpr();
+			return new CompositeExpr(e,op,andExpr());
 		}
+		return e;
 	}
 
 	// AndExpr ::= RelExpr [ "and" RelExpr ]
-	private void andExpr() {
-		relExpr();
+	private Expr andExpr() {
+		Expr e = relExpr();
 		if (lexer.getToken() == Gramatica.AND) {
+			String op = lexer.getToken();
 			lexer.nextToken();
-			relExpr();
+			return new CompositeExpr(e,op,relExpr());
 		}
+		return e;
 	}
 
 	// RelExpr ::= AddExpr [ RelOp AddExpr ]
-	private void relExpr() {
-		addExpr();
+	private Expr relExpr() {
+		Expr e = addExpr();
 		if (lexer.getToken() == Gramatica.MENOR || lexer.getToken() == Gramatica.MAIOR
 				|| lexer.getToken() == Gramatica.MENORIGUAL || lexer.getToken() == Gramatica.MAIORIGUAL
 				|| lexer.getToken() == Gramatica.IGUAL || lexer.getToken() == Gramatica.DIFERENTE) {
-			relOp();
-			addExpr();
-
+			String op = relOp();
+			return new CompositeExpr(e,op,addExpr());
 		}
+		return e;
 	}
 
-	private void addExpr() {
-		multExpr();
+	private Expr addExpr() {
+		Expr e = multExpr();
 		while (lexer.getToken() == Gramatica.MAIS || lexer.getToken() == Gramatica.MENOS) {
-			addOp();
-			multExpr();
+			String op = addOp();
+			return new CompositeExpr(e,op,multExpr());
 		}
+		return e;
 	}
 
-	private void multExpr() {
-		simpleExpr();
+	//MultExpr ::= SimpleExpr { MultOp SimpleExpr }
+	private Expr multExpr() {
+		Expr e = simpleExpr();
 		while (lexer.getToken() == Gramatica.MULTIPLICACAO || lexer.getToken() == Gramatica.DIVISAO
 				|| lexer.getToken() == Gramatica.MODULO) {
-			multOp();
-			simpleExpr();
+			String op = multOp();
+			return new CompositeExpr(e,op,simpleExpr());
 		}
+		return e;
 	}
 
 	// SimpleExpr ::= Number | Variable | "true" | "false" | Character | ’(’ Expr
 	// ’)’ | "not" SimpleExpr | AddOp SimpleExpr
-	private void simpleExpr() {
+	private Expr simpleExpr() {
+		Expr e = null;
 		switch (lexer.getToken()) {
-		case Gramatica.NUMBER:
-			number();
-			break;
-		case Gramatica.ID:
-			variable();
-			break;
-		case Gramatica.TRUE:
-			trueExpr();
-			break;
-		case Gramatica.FALSE:
-			trueExpr();
-			break;
-		case Gramatica.PARENTESESE:
-			lexer.nextToken();
-			expr();
-			if (lexer.getToken() == Gramatica.PARENTESESD)
+			case Gramatica.NUMBER:
+				e = number();
+				break;
+			case Gramatica.ID:
+				e = variable();
+				break;
+			case Gramatica.TRUE:
+				e = trueExpr();
+				break;
+			case Gramatica.FALSE:
+				e = falseExpr();
+				break;
+			case Gramatica.PARENTESESE:
 				lexer.nextToken();
-			else
+				e = expr();
+				if (lexer.getToken() == Gramatica.PARENTESESD)
+					lexer.nextToken();
+				else
+					error();
+				break;
+			case Gramatica.NOT:
+				lexer.nextToken();
+				e = simpleExpr();
+				break;
+			case Gramatica.MAIS:
+				addOp();
+				e = simpleExpr();
+				break;
+			case Gramatica.MENOS:
+				addOp();
+				e = simpleExpr();
+				break;
+			default:
 				error();
-			break;
-		case Gramatica.NOT:
-			lexer.nextToken();
-			simpleExpr();
-			break;
-		case Gramatica.MAIS:
-			addOp();
-			simpleExpr();
-			break;
-		case Gramatica.MENOS:
-			addOp();
-			simpleExpr();
-			break;
-		default:
-			error();
-			break;
-
+				break;
 		}
+		return e;
 	}
 
-	private void expr() {
-		// TODO Auto-generated method stub
-
+	private Expr expr() {
+		Expr e = null;
+		
+		return e;
 	}
 
-	private void trueExpr() {
+	private Expr trueExpr() {
+		Expr e = null;
 		if (lexer.getToken() == Gramatica.TRUE)
+		{
+			e = new TrueExpr(lexer.getToken());
 			lexer.nextToken();
+		}
 		else
 			error();
+		return e;
 	}
 
-	private void falseExpr() {
+	private Expr falseExpr() {
+		Expr e = null;
 		if (lexer.getToken() == Gramatica.FALSE)
+		{
+			e = new FalseExpr(lexer.getToken());
 			lexer.nextToken();
+		}
 		else
 			error();
+		return e;
 	}
 
-	private void number() {
+	private Expr number() {
+		Expr e = null;
 		if (lexer.getToken() == Gramatica.NUMBER)
+		{
+			e = new NumberExpr(lexer.getValorNumerico());
 			lexer.nextToken();
+		}
 		else
 			error();
+		return e;
 	}
 
-	private void multOp() {
+	private String multOp() {
+		String op = "";
 		if (lexer.getToken() == Gramatica.MULTIPLICACAO || lexer.getToken() == Gramatica.DIVISAO
 				|| lexer.getToken() == Gramatica.MODULO)
+		{
+			op = lexer.getValorString();
 			lexer.nextToken();
+		}
 		else
 			error();
-
+		return op;
 	}
 
-	private void addOp() {
-		if (lexer.getToken() == Gramatica.MAIS || lexer.getToken() == Gramatica.MENOS) {
+	private String addOp() {
+		String op = "";
+		if (lexer.getToken() == Gramatica.MAIS || lexer.getToken() == Gramatica.MENOS) 
+		{
+			op = lexer.getValorString();
 			lexer.nextToken();
-		} else
+		} 
+		else
 			error();
+		return op;
 	}
 
-	private void relOp() {
+	private String relOp() {
+		String op = "";
 		if (lexer.getToken() == Gramatica.MENOR || lexer.getToken() == Gramatica.MAIOR
 				|| lexer.getToken() == Gramatica.MENORIGUAL || lexer.getToken() == Gramatica.MAIORIGUAL
 				|| lexer.getToken() == Gramatica.IGUAL || lexer.getToken() == Gramatica.DIFERENTE) {
+			op = lexer.getValorString();
 			lexer.nextToken();
 		} else
 			error();
+		return op;
 	}
 
-	private void variable() {
+	private Expr variable() {
+		Expr e = null;
 		if (lexer.getToken() == Gramatica.ID)
+		{
+			e = new VariableExpr(lexer.getValorString());
 			lexer.nextToken();
+		}
 		else
 			error();
+		return e;
 	}
 
 }
