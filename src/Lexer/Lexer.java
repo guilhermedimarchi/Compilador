@@ -61,7 +61,8 @@ public class Lexer {
 
 	public void nextToken() {
 		char ch = '\0';
-
+		valorString = "";
+		
 		if (pos < entrada.length)
 			ch = entrada[pos];
 
@@ -143,6 +144,9 @@ public class Lexer {
 				switch (ch) {
 				case '+':
 					token = Gramatica.MAIS;
+					break;
+				case '%':
+					token = Gramatica.MODULO;
 					break;
 				case '-':
 					token = Gramatica.MENOS;

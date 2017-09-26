@@ -64,13 +64,17 @@ public class Compilador {
 			lexer.nextToken();
 			type();
 		} else
+		{
+			System.out.println("Dois pontos esperado!");
 			error();
-
+		}
 		if (lexer.getToken() == Gramatica.PONTOEVIRGULA) {
 			lexer.nextToken();
 		} else
+		{
+			System.out.println("Ponto e virgula esperado");
 			error();
-
+		}
 		return e;
 
 	}
@@ -81,7 +85,10 @@ public class Compilador {
 				|| lexer.getToken() == Gramatica.CHAR)
 			lexer.nextToken();
 		else
+		{
+			System.out.println("Esperado tipo: Integer, boolean ou char");
 			error();
+		}
 	}
 
 	// Ident ::= Letter { Letter }
@@ -99,8 +106,10 @@ public class Compilador {
 			e = new VariableExpr(lexer.getValorString());
 			lexer.nextToken();
 		} else
+		{
+			System.out.println("Esperado id");
 			error();
-
+		}
 		return e;
 	}
 
@@ -108,14 +117,19 @@ public class Compilador {
 	private Statement compositeStatement() {
 		Statement e = null;
 		if (lexer.getToken() != Gramatica.BEGIN)
+		{
+			System.out.println("Esperado Begin");
 			error();
-
+		}
 		lexer.nextToken();
 
 		e = statementList();
 
-		if (lexer.getToken() != Gramatica.END)
+		if (lexer.getToken() != Gramatica.END && lexer.getToken() != Gramatica.FIM)
+		{
+			System.out.println("Esperado END");
 			error();
+		}
 
 		lexer.nextToken();
 
@@ -125,14 +139,24 @@ public class Compilador {
 	// StatementList ::= | Statement ";" StatementList
 	private Statement statementList() {
 		Statement s = null;
+		Statement s2 = null;
 		if (lexer.getToken() != Gramatica.FIM) {
 			s = statement();
-			if (lexer.getToken() == Gramatica.PONTOEVIRGULA) {
-				lexer.nextToken();
-				return new CompositeStatement(s, statementList());
+			if(s!=null && lexer.getToken() != Gramatica.FIM)
+			{
+				if (lexer.getToken() == Gramatica.PONTOEVIRGULA) {
+					lexer.nextToken();
+				}
+				else
+				{
+					System.out.println("Esperado ;");
+					error();
+				}
+
+				s2 = statementList();
 			}
 		}
-		return s;
+		return new CompositeStatement(s, s2);
 	}
 
 	// Statement ::= AssignmentStatement | IfStatement | ReadStatement |
@@ -152,8 +176,6 @@ public class Compilador {
 		case Gramatica.WRITE:
 			s = writeStatement();
 			break;
-		default:
-			error();
 		}
 		return s;
 	}
@@ -171,9 +193,15 @@ public class Compilador {
 			if (lexer.getToken() == Gramatica.PARENTESESD)
 				lexer.nextToken();
 			else
+			{
+				System.out.println("Esperado PARENTESESD");
 				error();
+			}
 		} else
+		{
+			System.out.println("Esperado PARENTESESE");
 			error();
+		}
 		return new WriteStatement(e);
 	}
 
@@ -189,9 +217,15 @@ public class Compilador {
 			if (lexer.getToken() == Gramatica.PARENTESESD)
 				lexer.nextToken();
 			else
+			{
+				System.out.println("Esperado PARENTESESD");
 				error();
+			}
 		} else
+		{
+			System.out.println("Esperado PARENTESESE");
 			error();
+		}
 
 		return new ReadStatement(e);
 	}
@@ -215,8 +249,11 @@ public class Compilador {
 		if (lexer.getToken() == Gramatica.ENDIF)
 			lexer.nextToken();
 		else
+		{
+			System.out.println("Esperado ENDIF");
 			error();
-
+		}
+		
 		return new IfStatement(e, s1, s2);
 	}
 
@@ -228,7 +265,10 @@ public class Compilador {
 			lexer.nextToken();
 			return new AssignmentStatement(e, op, orExpr());
 		} else
+		{
+			System.out.println("Esperado: =");
 			error();
+		}
 		return null;
 	}
 
@@ -269,22 +309,26 @@ public class Compilador {
 	// AddExpr ::= MultExpr { AddOp MultExpr }
 	private Expr addExpr() {
 		Expr e = multExpr();
+		Expr d = null;
+		String op = "";
 		while (lexer.getToken() == Gramatica.MAIS || lexer.getToken() == Gramatica.MENOS) {
-			String op = addOp();
-			return new CompositeExpr(e, op, multExpr());
+			op = addOp();
+			d= multExpr();
 		}
-		return e;
+		return new CompositeExpr(e, op, d);
 	}
 
 	// MultExpr ::= SimpleExpr { MultOp SimpleExpr }
 	private Expr multExpr() {
 		Expr e = simpleExpr();
+		Expr d = null;
+		String op = "";
 		while (lexer.getToken() == Gramatica.MULTIPLICACAO || lexer.getToken() == Gramatica.DIVISAO
 				|| lexer.getToken() == Gramatica.MODULO) {
-			String op = multOp();
-			return new CompositeExpr(e, op, simpleExpr());
+			op = multOp();
+			d = simpleExpr();
 		}
-		return e;
+		return new CompositeExpr(e, op, d);
 	}
 
 	// SimpleExpr ::= Number | Variable | "true" | "false" | Character | ’(’ Expr
@@ -306,11 +350,14 @@ public class Compilador {
 			break;
 		case Gramatica.PARENTESESE:
 			lexer.nextToken();
-			e = expr();
+			e = orExpr(); //poderia ser expr()?
 			if (lexer.getToken() == Gramatica.PARENTESESD)
 				lexer.nextToken();
 			else
+			{
+				System.out.println("Esperado PARENTESESD");
 				error();
+			}
 			break;
 		case Gramatica.NOT:
 			lexer.nextToken();
@@ -324,8 +371,13 @@ public class Compilador {
 			addOp();
 			e = simpleExpr();
 			break;
+		case Gramatica.FIM:
+			
+			break;
 		default:
+		    System.out.println("Nao é expressao valida");
 			error();
+		
 			break;
 		}
 		return e;
