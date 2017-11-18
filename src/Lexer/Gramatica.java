@@ -3,6 +3,7 @@ package Lexer;
 public class Gramatica {
 
 	public final static String
+		VOID = "void",
 		FIM = "fim",
 		VAR = "var",
 		ID = "id",

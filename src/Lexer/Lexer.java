@@ -27,8 +27,8 @@ public class Lexer {
 
 	public Lexer(String entrada) {
 		this.entrada = entrada.toLowerCase().toCharArray();
-		pos = 0;
-		token = "";
+		this.pos = 0;
+		this.token = "";
 		initpalavrasReservadas();
 	}
 
@@ -61,7 +61,7 @@ public class Lexer {
 
 	public void nextToken() {
 		char ch = '\0';
-		valorString = "";
+		this.valorString = "";
 		
 		if (pos < entrada.length)
 			ch = entrada[pos];
