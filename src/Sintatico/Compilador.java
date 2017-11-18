@@ -1,5 +1,6 @@
 package Sintatico;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -47,18 +48,20 @@ public class Compilador {
 	private Vector varDecList() {
 		Vector v = new Vector();
 		v.addElement(varDecList2());
-		while (lexer.getToken() == Gramatica.ID) {
-			v.addElement(varDecList2());
-		}
+//		while (lexer.getToken() == Gramatica.ID) {
+//			v.addElement(varDecList2());
+//		}
 		return v;
 	}
 
 	// VarDecList2 ::= Ident { ’,’ Ident } ’:’ Type ’;’
-	private Expr varDecList2() {
+	private ArrayList<Expr> varDecList2() {
+		ArrayList<Expr> lst = new ArrayList();
 		Expr e = ident();
+		lst.add(e);
 		while (lexer.getToken() == Gramatica.VIRGULA) {
 			lexer.nextToken();
-			ident();
+			lst.add(ident());
 		}
 		if (lexer.getToken() == Gramatica.DOISPONTOS) {
 			lexer.nextToken();
@@ -75,7 +78,7 @@ public class Compilador {
 			System.out.println("Ponto e virgula esperado");
 			error();
 		}
-		return e;
+		return  lst;
 
 	}
 
@@ -92,8 +95,8 @@ public class Compilador {
 	}
 
 	// Ident ::= Letter { Letter }
-	private Expr ident() {
 		Expr e = null;
+		private Expr ident() {
 		if (lexer.getToken() == Gramatica.ID) {
 			// analise semantica
 			if (!variaveisDeclaradas.containsKey(lexer.getValorString()))
