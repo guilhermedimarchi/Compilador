@@ -22,7 +22,7 @@ import Lexer.Lexer;
 
 public class Compilador {
 	private Lexer lexer;
-	private Hashtable<String, Integer> variaveisDeclaradas = new Hashtable();
+	private Hashtable<String, VariableExpr> variaveisDeclaradas = new Hashtable();
 
 	public Compilador(Lexer lexer) {
 		this.lexer = lexer;
@@ -111,12 +111,15 @@ public class Compilador {
 			if (lexer.getToken() == Gramatica.ID) {
 				// analise semantica
 				if (!variaveisDeclaradas.containsKey(lexer.getValorString()))
-					variaveisDeclaradas.put(lexer.getValorString(), 0);
+				{
+					e = new VariableExpr(lexer.getValorString());
+					variaveisDeclaradas.put(lexer.getValorString(), e);
+				}
 				else {
 					System.out.println("Nome de variável já utilizado\n");
 					error();
 				}
-				e = new VariableExpr(lexer.getValorString());
+				
 				lexer.nextToken();
 			} else
 			{
@@ -471,7 +474,7 @@ public class Compilador {
 			// Analise sintatica. Verifica se a variavel que está sendo utilizada foi
 			// realmente criada
 			if (variaveisDeclaradas.containsKey(lexer.getValorString()))
-				e = new VariableExpr(lexer.getValorString());
+				e = variaveisDeclaradas.get(lexer.getValorString());
 			else {
 				System.out.println("Variavel não declarada");
 				error();
