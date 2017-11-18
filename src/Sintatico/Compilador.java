@@ -67,10 +67,20 @@ public class Compilador {
 			lexer.nextToken();
 		
 			String type = type();
+			Object valor;
+			
+			if (type == Gramatica.INTEGER)
+			{
+				valor = 0;
+			}
+			else
+				valor = "";
+			
 			
 			for(VariableExpr var : lst)
 			{
 				var.setType(type);
+				var.setValor(valor);
 			}
 		} else
 		{

@@ -2,7 +2,7 @@ package AST;
 
 public class VariableExpr extends Expr {
 	private String name;
-	private Integer valor;
+	private Object valor;
 	private String type;
 	
 	public VariableExpr(String name)
@@ -22,10 +22,10 @@ public class VariableExpr extends Expr {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Integer getValor() {
+	public Object getValor() {
 		return valor;
 	}
-	public void setValor(Integer valor) {
+	public void setValor(Object valor) {
 		this.valor = valor;
 	}
 	public String getType() {
