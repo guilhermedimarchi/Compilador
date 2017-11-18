@@ -17,7 +17,7 @@ public class Main {
 		
 		Program p = compilador.program();
 		
-		System.out.println(p);
+		System.out.println("AST: "+ p);
 
 		System.out.println("Sucesso");
 
