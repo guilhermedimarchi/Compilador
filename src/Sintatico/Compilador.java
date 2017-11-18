@@ -331,7 +331,9 @@ public class Compilador {
 			op = addOp();
 			d= multExpr();
 		}
-		return new CompositeExpr(e, op, d);
+		if(op != null && d != null)
+			return new CompositeExpr(e, op, d);
+		return e;
 	}
 
 	// MultExpr ::= SimpleExpr { MultOp SimpleExpr }
@@ -344,7 +346,9 @@ public class Compilador {
 			op = multOp();
 			d = simpleExpr();
 		}
-		return new CompositeExpr(e, op, d);
+		if(op != null && d != null)
+			return new CompositeExpr(e, op, d);
+		return e;
 	}
 
 	// SimpleExpr ::= Number | Variable | "true" | "false" | Character | ’(’ Expr
