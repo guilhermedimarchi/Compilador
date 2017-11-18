@@ -48,16 +48,16 @@ public class Compilador {
 	private Vector varDecList() {
 		Vector v = new Vector();
 		v.addElement(varDecList2());
-//		while (lexer.getToken() == Gramatica.ID) {
-//			v.addElement(varDecList2());
-//		}
+		while (lexer.getToken() == Gramatica.ID) {
+			v.addElement(varDecList2());
+		}
 		return v;
 	}
 
 	// VarDecList2 ::= Ident { ’,’ Ident } ’:’ Type ’;’
-	private ArrayList<Expr> varDecList2() {
-		ArrayList<Expr> lst = new ArrayList();
-		Expr e = ident();
+	private ArrayList<VariableExpr> varDecList2() {
+		ArrayList<VariableExpr> lst = new ArrayList();
+		VariableExpr e = ident();
 		lst.add(e);
 		while (lexer.getToken() == Gramatica.VIRGULA) {
 			lexer.nextToken();
@@ -65,7 +65,13 @@ public class Compilador {
 		}
 		if (lexer.getToken() == Gramatica.DOISPONTOS) {
 			lexer.nextToken();
-			type();
+		
+			String type = type();
+			
+			for(VariableExpr var : lst)
+			{
+				var.setType(type);
+			}
 		} else
 		{
 			System.out.println("Dois pontos esperado!");
@@ -83,37 +89,41 @@ public class Compilador {
 	}
 
 	// Type ::= "integer" | "boolean" | "char"
-	private void type() {
-		if (lexer.getToken() == Gramatica.INTEGER || lexer.getToken() == Gramatica.BOOLEAN
-				|| lexer.getToken() == Gramatica.CHAR)
+	private String type() {
+		String type = "";
+		if (lexer.getToken() == Gramatica.INTEGER || lexer.getToken() == Gramatica.BOOLEAN || lexer.getToken() == Gramatica.CHAR)
+		{	
+			type = lexer.getToken();
 			lexer.nextToken();
+		}
 		else
 		{
 			System.out.println("Esperado tipo: Integer, boolean ou char");
 			error();
 		}
+		return type;
 	}
 
 	// Ident ::= Letter { Letter }
-		Expr e = null;
-		private Expr ident() {
-		if (lexer.getToken() == Gramatica.ID) {
-			// analise semantica
-			if (!variaveisDeclaradas.containsKey(lexer.getValorString()))
-				variaveisDeclaradas.put(lexer.getValorString(), 0);
-			else {
-				System.out.println("Nome de variável já utilizado\n");
+		
+		private VariableExpr ident() {
+			VariableExpr e = null;
+			if (lexer.getToken() == Gramatica.ID) {
+				// analise semantica
+				if (!variaveisDeclaradas.containsKey(lexer.getValorString()))
+					variaveisDeclaradas.put(lexer.getValorString(), 0);
+				else {
+					System.out.println("Nome de variável já utilizado\n");
+					error();
+				}
+				e = new VariableExpr(lexer.getValorString());
+				lexer.nextToken();
+			} else
+			{
+				System.out.println("Esperado id");
 				error();
 			}
-
-			e = new VariableExpr(lexer.getValorString());
-			lexer.nextToken();
-		} else
-		{
-			System.out.println("Esperado id");
-			error();
-		}
-		return e;
+			return e;
 	}
 
 	// CompositeStatement ::= "begin" StatementList "end"
