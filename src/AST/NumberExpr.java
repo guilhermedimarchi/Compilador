@@ -1,16 +1,17 @@
 package AST;
 
+import Lexer.Gramatica;
+
 public class NumberExpr extends Expr{
 	@Override
 	public String toString() {
-		return "NumberExpr [valor=" + valor + "]";
+		return "NumberExpr [valor=" + this.getValor() + "]";
 	}
 
-	private Integer valor;
-	
 	public NumberExpr(Integer valor)
 	{
-		this.valor = valor;
+		this.setType(Gramatica.INTEGER);
+		this.setValor(valor);
 	}
 
 }

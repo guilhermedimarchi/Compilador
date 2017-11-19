@@ -102,7 +102,21 @@ public class Lexer {
 					token = palavrasReservadas.get(palavra);
 					valorString = palavra;
 				}
-			} else if (ch == '=') {
+			} 
+			
+			else if(ch == '’')
+			{
+				String palavra = ""+ ch;
+				pos++;
+				palavra += entrada[pos];
+				pos++;
+				palavra += entrada[pos];
+				pos++;
+				token = Gramatica.CHAR;
+				valorString = palavra;
+			}
+			
+			else if (ch == '=') {
 				String palavra = ""+ ch;
 				pos++;
 				if (entrada[pos] == '=') {

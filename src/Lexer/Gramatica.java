@@ -1,5 +1,7 @@
 package Lexer;
 
+import AST.Expr;
+
 public class Gramatica {
 
 	public final static String
@@ -45,5 +47,47 @@ public class Gramatica {
 		NOT = "not",
 		FALSE = "false",
 		DOISPONTOS = "doispontos";
+	
+	public static boolean checkTypes(Expr e, String op, Expr d)
+	{
+		boolean retorno = true;
+		if(op == Gramatica.ATRIBUICAO)
+		{
+			if(e.getType() != d.getType())
+				retorno =  false;
+		}
+		
+		if(op == Gramatica.IGUAL || op == Gramatica.MAIOR || op == Gramatica.MENOR || op == Gramatica.MAIORIGUAL || op == Gramatica.MENORIGUAL || op == Gramatica.DIFERENTE || op == Gramatica.MULTIPLICACAO || op == Gramatica.DIVISAO
+				|| op == Gramatica.MODULO || op == Gramatica.MAIS || op == Gramatica.MENOS)
+		{
+			if(e.getType()!=d.getType())
+				retorno =  false;
+		}
+		
+		if(op==Gramatica.OR )
+		{
+			if(d.getType() != Gramatica.BOOLEAN || e.getType() != Gramatica.BOOLEAN)
+				retorno =  false;
+		}
+		
+		if(op==Gramatica.AND)
+		{
+			if(d.getType() != Gramatica.BOOLEAN || e.getType() != Gramatica.BOOLEAN)
+				retorno = false;
+		}
+		
+		if(!retorno)
+		{
+			System.out.println("Tipo de variável errado");
+			error();
+		}
+		
+		return retorno;
+	}
+	
+	public static void error() {
+		System.out.println("ERRO");
+		Runtime.getRuntime().exit(1);
+	}
 	
 }

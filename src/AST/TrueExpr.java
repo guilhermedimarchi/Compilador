@@ -9,14 +9,15 @@ public class TrueExpr  extends Expr{
 	
 	public TrueExpr(String valor)
 	{
+		this.setType(Gramatica.BOOLEAN);
 		if(valor == Gramatica.TRUE)
-			this.valor = true;
+			this.setValor(true); 
 		else
 			valor = null;
 	}
 	@Override
 	public String toString() {
-		return "TrueExpr [valor=" + valor + "]";
+		return "TrueExpr [valor=" + this.getValor() + "]";
 	}
 
 }

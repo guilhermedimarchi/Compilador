@@ -1,5 +1,7 @@
 package AST;
 
+import Lexer.Gramatica;
+
 public class AssignmentStatement extends Statement {
 	Expr e, d;
 	String op;
