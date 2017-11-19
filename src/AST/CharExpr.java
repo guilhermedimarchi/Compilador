@@ -14,4 +14,9 @@ public class CharExpr extends Expr{
 		this.setValor(valor); 
 	}
 
+	@Override
+	public void genC(StringBuilder sb) {
+		sb.append(this.getValor());		
+	}
+
 }

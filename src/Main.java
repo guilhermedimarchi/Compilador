@@ -22,6 +22,8 @@ public class Main {
 		p.genC(sb);
 		
 		System.out.println("AST: "+ p);
+		
+		System.out.println(sb.toString());
 
 		System.out.println("Sucesso");
 

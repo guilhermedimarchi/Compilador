@@ -15,6 +15,7 @@ public class ReadStatement extends Statement {
 		return "ReadStatement [e=" + e + "]";
 	}
 	
+	@Override
 	public void genC( StringBuilder sb)
 	{
 		
@@ -23,7 +24,7 @@ public class ReadStatement extends Statement {
 		else
 			sb.append("scanf(\"%i\", &" );
 		
-		sb.append(( (VariableExpr) e).getName() + "); " );
+		sb.append(( (VariableExpr) e).getName() + ");\n " );
 	
 	}
 

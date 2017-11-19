@@ -17,4 +17,9 @@ public class VariableExpr extends Expr {
 		return "VariableExpr [name=" + this.getName() + ", valor=" + this.getValor() + ", type=" + this.getType() + "]";
 	}
 	
+	
+	@Override
+	public void genC(StringBuilder sb) {
+		sb.append(this.getName());		
+	}
 }

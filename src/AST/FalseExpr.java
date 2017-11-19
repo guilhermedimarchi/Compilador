@@ -17,4 +17,9 @@ public class FalseExpr extends Expr{
 	public String toString() {
 		return "FalseExpr [valor=" + this.getValor() + "]";
 	}
+	
+	@Override
+	public void genC(StringBuilder sb) {
+		sb.append(this.getValor());		
+	}
 }

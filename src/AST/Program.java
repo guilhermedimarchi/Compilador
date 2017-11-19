@@ -39,7 +39,7 @@ public class Program {
 			}
 		}
 		
-		//s.genC(sb);
+		s.genC(sb);
 		
 		sb.append("}");
 		

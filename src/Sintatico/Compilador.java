@@ -166,8 +166,6 @@ public class Compilador {
 	private StatementList statementList() {
 		Vector v = new Vector();
 		Statement s = null;
-		
-		
 		while ( lexer.getToken() == Gramatica.ID || lexer.getToken() == Gramatica.IF || lexer.getToken() == Gramatica.READ || lexer.getToken() == Gramatica.WRITE ) 
 		{ 
 			v.addElement( statement() ); 

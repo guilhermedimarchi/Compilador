@@ -17,4 +17,12 @@ public class AssignmentStatement extends Statement {
 	public String toString() {
 		return "AssignmentStatement [Expr esquerda=" + e +  ", op=" + op + ", Expr direita=" + d + "]";
 	}
+
+	@Override
+	public void genC(StringBuilder sb) {
+		e.genC(sb);
+		sb.append(" = ");
+		d.genC(sb);
+		sb.append(";\n");
+	}
 }

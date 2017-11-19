@@ -12,4 +12,11 @@ public class WriteStatement extends Statement {
 	{
 		this.e = e;
 	}
+
+	@Override
+	public void genC(StringBuilder sb) {
+		sb.append("printf(\"%d\", ");
+		e.genC(sb);
+		sb.append(");\n");		
+	}
 }

@@ -28,4 +28,5 @@ public abstract class Expr {
 	public void setValor(Object valor) {
 		this.valor = valor;
 	}
+	public abstract void genC( StringBuilder sb);
 }

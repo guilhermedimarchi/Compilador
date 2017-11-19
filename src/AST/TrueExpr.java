@@ -19,5 +19,10 @@ public class TrueExpr  extends Expr{
 	public String toString() {
 		return "TrueExpr [valor=" + this.getValor() + "]";
 	}
+	
+	@Override
+	public void genC(StringBuilder sb) {
+		sb.append(this.getValor());		
+	}
 
 }

@@ -14,4 +14,9 @@ public class CompositeStatement extends Statement{
 		return "CompositeStatement [statementList=" + sl + "]";
 	}
 	
+	public void genC( StringBuilder sb)
+	{
+		sl.genC(sb);
+	}
+	
 }

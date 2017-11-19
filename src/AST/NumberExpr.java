@@ -13,5 +13,10 @@ public class NumberExpr extends Expr{
 		this.setType(Gramatica.INTEGER);
 		this.setValor(valor);
 	}
+	
+	@Override
+	public void genC(StringBuilder sb) {
+		sb.append(this.getValor());		
+	}
 
 }

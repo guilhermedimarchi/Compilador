@@ -30,4 +30,54 @@ public class CompositeExpr extends Expr{
 		return "CompositeExpr [Expr esquerda=" + e +  ", op=" + op + ", Expr direita=" + d + "]";
 	}
 
+	@Override
+	public void genC(StringBuilder sb) {
+		e.genC(sb);
+		
+		switch(op) {
+			case Gramatica.MULTIPLICACAO:
+				sb.append(" * ");
+				break;
+			case Gramatica.MAIS:
+				sb.append(" + ");
+				break;
+			case Gramatica.MENOS:
+				sb.append(" - ");
+				break;
+			case Gramatica.DIVISAO:
+				sb.append(" / ");
+				break;
+			case Gramatica.MAIOR:
+				sb.append(" > ");
+				break;
+			case Gramatica.MENOR:
+				sb.append(" < ");
+				break;
+			case Gramatica.MENORIGUAL:
+				sb.append(" <= ");
+				break;
+			case Gramatica.MAIORIGUAL:
+				sb.append(" >= ");
+				break;
+			case Gramatica.AND:
+				sb.append(" && ");
+				break;
+			case Gramatica.OR:
+				sb.append(" || ");
+				break;
+			case Gramatica.IGUAL:
+				sb.append(" == ");
+				break;
+			default:
+				sb.append(" != ");
+				break;
+				
+		}
+		
+		d.genC(sb);
+		
+		
+		
+	}
+
 }
