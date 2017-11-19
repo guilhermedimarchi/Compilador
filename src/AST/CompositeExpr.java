@@ -68,6 +68,9 @@ public class CompositeExpr extends Expr{
 			case Gramatica.IGUAL:
 				sb.append(" == ");
 				break;
+			case Gramatica.NOT:
+				sb.append(" !");
+				break;
 			default:
 				sb.append(" != ");
 				break;

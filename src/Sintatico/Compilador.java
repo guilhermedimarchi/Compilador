@@ -360,7 +360,7 @@ public class Compilador {
 		Expr e = addExpr();
 		if (lexer.getToken() == Gramatica.MENOR || lexer.getToken() == Gramatica.MAIOR
 				|| lexer.getToken() == Gramatica.MENORIGUAL || lexer.getToken() == Gramatica.MAIORIGUAL
-				|| lexer.getToken() == Gramatica.IGUAL || lexer.getToken() == Gramatica.DIFERENTE) {
+				|| lexer.getToken() == Gramatica.IGUAL || lexer.getToken() == Gramatica.DIFERENTE || lexer.getToken() == Gramatica.NOT) {
 			
 			
 			String op = relOp();
