@@ -1,5 +1,7 @@
 package AST;
 
+import Lexer.Gramatica;
+
 public class ReadStatement extends Statement {
 	Expr e;
 	
@@ -11,6 +13,18 @@ public class ReadStatement extends Statement {
 	@Override
 	public String toString() {
 		return "ReadStatement [e=" + e + "]";
+	}
+	
+	public void genC( StringBuilder sb)
+	{
+		
+		if(((VariableExpr)e).getType()==Gramatica.CHAR)
+			sb.append("scanf(\"%s\", &" );
+		else
+			sb.append("scanf(\"%i\", &" );
+		
+		sb.append(( (VariableExpr) e).getName() + "); " );
+	
 	}
 
 }

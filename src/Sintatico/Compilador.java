@@ -15,6 +15,7 @@ import AST.NumberExpr;
 import AST.Program;
 import AST.ReadStatement;
 import AST.Statement;
+import AST.StatementList;
 import AST.TrueExpr;
 import AST.VariableExpr;
 import AST.WriteStatement;
@@ -24,6 +25,7 @@ import Lexer.Lexer;
 public class Compilador {
 	private Lexer lexer;
 	private Hashtable<String, VariableExpr> variaveisDeclaradas = new Hashtable();
+	
 
 	public Compilador(Lexer lexer) {
 		this.lexer = lexer;
@@ -134,12 +136,14 @@ public class Compilador {
 				System.out.println("Esperado id");
 				Gramatica.error();
 			}
+			
+			
 			return e;
 	}
 
 	// CompositeStatement ::= "begin" StatementList "end"
-	private Statement compositeStatement() {
-		Statement e = null;
+	private CompositeStatement compositeStatement() {
+		StatementList e = null;
 		if (lexer.getToken() != Gramatica.BEGIN)
 		{
 			System.out.println("Esperado Begin");
@@ -154,33 +158,25 @@ public class Compilador {
 			System.out.println("Esperado END");
 			Gramatica.error();
 		}
-
 		lexer.nextToken();
-
-		return e;
+		return new CompositeStatement(e);
 	}
 
 	// StatementList ::= | Statement ";" StatementList
-	private Statement statementList() {
+	private StatementList statementList() {
+		Vector v = new Vector();
 		Statement s = null;
-		Statement s2 = null;
-		if (lexer.getToken() != Gramatica.FIM) {
-			s = statement();
-			if(s!=null && lexer.getToken() != Gramatica.FIM)
-			{
-				if (lexer.getToken() == Gramatica.PONTOEVIRGULA) {
-					lexer.nextToken();
-				}
-				else
-				{
-					System.out.println("Esperado ;");
-					Gramatica.error();
-				}
-
-				s2 = statementList();
-			}
-		}
-		return new CompositeStatement(s, s2);
+		
+		
+		while ( lexer.getToken() == Gramatica.ID || lexer.getToken() == Gramatica.IF || lexer.getToken() == Gramatica.READ || lexer.getToken() == Gramatica.WRITE ) 
+		{ 
+			v.addElement( statement() ); 
+			if ( lexer.getToken() != Gramatica.PONTOEVIRGULA ) 
+				Gramatica.error();
+				lexer.nextToken(); 
+			} 
+		
+		return new StatementList(v);
 	}
 
 	// Statement ::= AssignmentStatement | IfStatement | ReadStatement |
@@ -259,19 +255,29 @@ public class Compilador {
 	private Statement ifStatement() {
 		Statement s1 = null, s2 = null;
 
+
 		lexer.nextToken();
 		Expr e = orExpr();
+
+		
 		if (lexer.getToken() == Gramatica.THEN) {
 			lexer.nextToken();
 			s1 = statementList();
+		
 		} else
 			Gramatica.error();
 		if (lexer.getToken() == Gramatica.ELSE) {
+			
+
 			lexer.nextToken();
 			s2 = statementList();
+	
 		}
 		if (lexer.getToken() == Gramatica.ENDIF)
+		{
 			lexer.nextToken();
+		
+		}
 		else
 		{
 			System.out.println("Esperado ENDIF");
@@ -306,10 +312,7 @@ public class Compilador {
 			}
 			else
 				Gramatica.error();
-			
-			
-			
-			
+
 			return new AssignmentStatement(e, op, d);
 		} else
 		{
