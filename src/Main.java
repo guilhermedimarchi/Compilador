@@ -10,19 +10,18 @@ public class Main {
 
 		String entradaErro = "var abc : integer; begin aaa))( READ(abc); Write(abc);  end";
 
-		
 		String entradsa = "var i, j : integer; begin j = i + 1; end";
-		
+
 		System.out.println("Código de entrada: " + entrada);
 
 		Lexer lexer = new Lexer(entrada);
 		Compilador compilador = new Compilador(lexer);
-		
+
 		Program p = compilador.program();
 		p.genC(sb);
-		
-		System.out.println("AST: "+ p);
-		
+
+		System.out.println("AST: " + p);
+
 		System.out.println(sb.toString());
 
 		System.out.println("Sucesso");

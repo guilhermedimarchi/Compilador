@@ -7,9 +7,8 @@ public class WriteStatement extends Statement {
 	}
 
 	Expr e;
-	
-	public WriteStatement(Expr e)
-	{
+
+	public WriteStatement(Expr e) {
 		this.e = e;
 	}
 
@@ -17,6 +16,6 @@ public class WriteStatement extends Statement {
 	public void genC(StringBuilder sb) {
 		sb.append("printf(\"%d\", ");
 		e.genC(sb);
-		sb.append(");\n");		
+		sb.append(");\n");
 	}
 }

@@ -2,12 +2,11 @@ package AST;
 
 public class VariableExpr extends Expr {
 
-	public VariableExpr(String name)
-	{
+	public VariableExpr(String name) {
 		this.setName(name);
 	}
-	public VariableExpr(String name, Integer valor)
-	{
+
+	public VariableExpr(String name, Integer valor) {
 		this.setName(name);
 		this.setValor(valor);
 	}
@@ -16,10 +15,9 @@ public class VariableExpr extends Expr {
 	public String toString() {
 		return "VariableExpr [name=" + this.getName() + ", valor=" + this.getValor() + ", type=" + this.getType() + "]";
 	}
-	
-	
+
 	@Override
 	public void genC(StringBuilder sb) {
-		sb.append(this.getName());		
+		sb.append(this.getName());
 	}
 }

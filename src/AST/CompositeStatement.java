@@ -1,11 +1,10 @@
 package AST;
 
-public class CompositeStatement extends Statement{
+public class CompositeStatement extends Statement {
 
 	private StatementList sl;
-	
-	public CompositeStatement(StatementList sl)
-	{
+
+	public CompositeStatement(StatementList sl) {
 		this.sl = sl;
 	}
 
@@ -13,10 +12,9 @@ public class CompositeStatement extends Statement{
 	public String toString() {
 		return "CompositeStatement [statementList=" + sl + "]";
 	}
-	
-	public void genC( StringBuilder sb)
-	{
+
+	public void genC(StringBuilder sb) {
 		sl.genC(sb);
 	}
-	
+
 }

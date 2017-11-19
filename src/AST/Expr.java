@@ -1,7 +1,7 @@
 package AST;
 
 public abstract class Expr {
-	
+
 	private String name;
 	private String type;
 	private Object valor;
@@ -14,19 +14,21 @@ public abstract class Expr {
 		this.type = type;
 	}
 
-	
-	
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
+
 	public Object getValor() {
 		return valor;
 	}
+
 	public void setValor(Object valor) {
 		this.valor = valor;
 	}
-	public abstract void genC( StringBuilder sb);
+
+	public abstract void genC(StringBuilder sb);
 }

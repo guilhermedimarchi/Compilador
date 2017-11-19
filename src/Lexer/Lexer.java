@@ -18,7 +18,7 @@ public class Lexer {
 	public int getValorNumerico() {
 		return valorNumerico;
 	}
-	
+
 	public String getValorString() {
 		return valorString;
 	}
@@ -62,7 +62,7 @@ public class Lexer {
 	public void nextToken() {
 		char ch = '\0';
 		this.valorString = "";
-		
+
 		if (pos < entrada.length)
 			ch = entrada[pos];
 
@@ -92,21 +92,17 @@ public class Lexer {
 					palavra += entrada[pos];
 					pos++;
 				}
-				if (!palavrasReservadas.containsKey(palavra))
-				{
+				if (!palavrasReservadas.containsKey(palavra)) {
 					token = Gramatica.ID;
 					valorString = palavra;
-				}
-				else
-				{
+				} else {
 					token = palavrasReservadas.get(palavra);
 					valorString = palavra;
 				}
-			} 
-			
-			else if(ch == '’')
-			{
-				String palavra = ""+ ch;
+			}
+
+			else if (ch == '’') {
+				String palavra = "" + ch;
 				pos++;
 				palavra += entrada[pos];
 				pos++;
@@ -115,9 +111,9 @@ public class Lexer {
 				token = Gramatica.CHAR;
 				valorString = palavra;
 			}
-			
+
 			else if (ch == '=') {
-				String palavra = ""+ ch;
+				String palavra = "" + ch;
 				pos++;
 				if (entrada[pos] == '=') {
 					palavra += entrada[pos];
@@ -128,7 +124,7 @@ public class Lexer {
 				}
 				valorString = palavra;
 			} else if (ch == '<') {
-				String palavra = ""+ ch;
+				String palavra = "" + ch;
 				pos++;
 				if (entrada[pos] == '=') {
 					palavra += entrada[pos];
@@ -137,19 +133,17 @@ public class Lexer {
 				} else if (entrada[pos] == '>') {
 					palavra += entrada[pos];
 					token = Gramatica.DIFERENTE;
-				}
-				else
+				} else
 					token = Gramatica.MENOR;
 				valorString = palavra;
 			} else if (ch == '>') {
-				String palavra = ""+ ch;
+				String palavra = "" + ch;
 				pos++;
 				if (entrada[pos] == '=') {
 					palavra += entrada[pos];
 					pos++;
 					token = Gramatica.MAIORIGUAL;
-				}
-				else
+				} else
 					token = Gramatica.MAIOR;
 				valorString = palavra;
 			} else {

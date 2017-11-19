@@ -2,21 +2,20 @@ package AST;
 
 import Lexer.Gramatica;
 
-public class NumberExpr extends Expr{
+public class NumberExpr extends Expr {
 	@Override
 	public String toString() {
 		return "NumberExpr [valor=" + this.getValor() + "]";
 	}
 
-	public NumberExpr(Integer valor)
-	{
+	public NumberExpr(Integer valor) {
 		this.setType(Gramatica.INTEGER);
 		this.setValor(valor);
 	}
-	
+
 	@Override
 	public void genC(StringBuilder sb) {
-		sb.append(this.getValor());		
+		sb.append(this.getValor());
 	}
 
 }
